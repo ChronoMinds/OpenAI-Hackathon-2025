@@ -57,23 +57,29 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
       return;
     }
 
-    const blob = new Blob([icsContent], { type: "text/calendar" });
+    if(true) {
+      var google_event = utils.convertICSToGoogleEvent(icsContent);
+      utils.createGoogleCalendarEvent(await utils.getStorage("GoogleToken"), google_event);
+    }
+    else {
+      const blob = new Blob([icsContent], { type: "text/calendar" });
 
-    const reader = new FileReader();
-    reader.onload = function () {
-      const url = reader.result; // das ist jetzt eine data:URL
+      const reader = new FileReader();
+      reader.onload = function () {
+        const url = reader.result; // das ist jetzt eine data:URL
 
-      chrome.downloads.download({
-        url: url,
-        filename: "generated-event.ics",
-        saveAs: true
-      });
-    };
+        chrome.downloads.download({
+          url: url,
+          filename: "generated-event.ics",
+          saveAs: true
+        });
+      };
 
-    reader.onerror = function (err) {
-      console.error("Error reading blob as Data URL:", err);
-    };
-    reader.readAsDataURL(blob);
+      reader.onerror = function (err) {
+        console.error("Error reading blob as Data URL:", err);
+      };
+      reader.readAsDataURL(blob);
+    } 
     utils.success("Succesfully downloaded ics file.");
   } catch (err) {
     console.error("Error during ICS generation: " + JSON.stringify(err, Object.getOwnPropertyNames(err)), err);
@@ -88,4 +94,16 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   } else if (message.action === "getSelectedText") {
     sendResponse({ text: lastSelectedText });
   }
+});
+
+chrome.runtime.onInstalled.addListener(() => {
+  chrome.identity.getAuthToken({ interactive: true }, async function(token) {
+    if (chrome.runtime.lastError || !token) {
+      console.error("Authentication failed:", chrome.runtime.lastError);
+      return;}
+
+    console.log("Access Token:", token);
+    await utils.setStorage("GoogleToken",token);
+    // createGoogleCalendarEvent(token);
+  });
 });

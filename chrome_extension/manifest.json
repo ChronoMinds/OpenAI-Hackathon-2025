@@ -6,7 +6,17 @@
     "page": "config.html",
     "open_in_tab": true
   },
-  "permissions": ["scripting", "activeTab", "contextMenus", "downloads", "activeTab", "storage","notifications"],
+  "key": "AAAAB3NzaC1yc2EAAAADAQABAAABgQCkdjklMnPrqhDvK0tXW4odFA6wLO5hp8v87kU0XsOrfyTpUSOK8+0pxlKm3tsfuA3IYc0waKXOUeb11TRcFITlaxlZy1hpBvIJHvFg3iBu+A/VzGMwVxnkDeveSpaKu7qK9Ioo+96CaHMOuEc1VuFB84KF5h5TbJPdcH0u5WHYV0O0BDdyKK76dGqoxwgEVkD5QbV42trg9wnND4hfL8TYE383DcuZ2hzCqIsYZyI4iGcfBSfv0diOOnRwZLRewEHCosNmlTSmU921ZKgwWRylV8fMZaTx4puNFagFe8aZur1OD1kBO5nF9IvMmPYEREMySdxZkWkb6Hfxk6NhUVsu91Dc+mpJE3EWLtO/XQZnvwB0atFS0iaDyKEIGvR2k2XKzm32mifMYnXA2/1VsYHJdJU3ThhaAOHZoIGe+lIrDF5rTqdNbdOpnnbTPYNJ/aBEzToySPAoHpBPGUtBGNpS1dB6Pby6bGvMTx/XwYJZVPKC6316d4kH9De2q1M86SM=",
+ 
+  "oauth2": {
+      "client_id": "560490500433-09abtn9a7fn1vohemnctp4eiiv5d5pf1.apps.googleusercontent.com",
+      "scopes": [
+          "https://www.googleapis.com/auth/calendar.events",
+          "https://www.googleapis.com/auth/calendar.readonly",
+          "https://www.googleapis.com/auth/calendar"
+      ]
+  },
+  "permissions": ["scripting", "activeTab", "contextMenus", "downloads", "activeTab", "storage","notifications", "identity"],
   "host_permissions": [
     "<all_urls>"
   ],

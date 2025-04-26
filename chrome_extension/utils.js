@@ -136,6 +136,35 @@ export function success(message) {
     iconUrl: "icons/icon.png", // oder irgendein kleines Icon deiner Extension
     title: "Success",
     message: message,
-    priority: 0
+    priority: 2
+  });
+}
+
+
+export function createGoogleCalendarEvent(accessToken, event) {
+  // const event = {
+  //   summary: "Meeting with the team",
+  //   location: "Online",
+  //   description: "Discussing project updates.",
+  //   start: {
+  //     dateTime: "2025-04-27T15:00:00Z",
+  //     timeZone: "UTC"
+  //   },
+  //   end: {
+  //     dateTime: "2025-04-27T16:00:00Z",
+  //     timeZone: "UTC"
+  //   }
+  // };
+
+  fetch("https://www.googleapis.com/calendar/v3/calendars/primary/events", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(event)
+  })
+  .catch(error => {
+    console.error("Error creating event:", error);
   });
 }
