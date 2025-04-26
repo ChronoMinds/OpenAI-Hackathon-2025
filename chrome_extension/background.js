@@ -11,7 +11,31 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
 
 
   const selectedText = info.selectionText;
-  const prompt = "Please generate an ICS for: " + selectedText;
+  const prompt = `
+  You are a strict ICS file generator.
+  
+  Understand the following input text and determine if it describes an event (a meeting, appointment, party, gathering, etc.).
+  
+  If it IS an event, extract the following fields semantically and output a valid .ics content, strictly following the ICS format:
+  
+  BEGIN:VCALENDAR
+  VERSION:2.0
+  BEGIN:VEVENT
+  SUMMARY: [Event title] (If missing, generate a short fitting title)
+  DTSTART: [YYYYMMDDTHHMMSSZ] (IF there is just 1 Date or DateTime given, it is always DTStart. If only Date and no Time is provided, Format is "DTSTART;VALUE=DATE:YYYYMMDD" and DTEND to 1 day after in same format)
+  DTEND: [YYYYMMDDTHHMMSSZ] (If missing, set 1 hour after DTSTART)
+  DESCRIPTION: [Short description, or leave empty if none]
+  LOCATION: [Location, or leave empty if none]
+  UID: [Use provided ID, or generate a random UUID if missing]
+  END:VEVENT
+  END:VCALENDAR
+  
+  Rules:
+  
+  - Dates must be in UTC and in YYYYMMDDTHHMMSSZ format.
+  - No additional text outside the ICS format unless there is an ERROR.
+  - Keep the ICS minimal, clean, and valid.
+  ` + selectedText;
 
   try {
     const maxAttempts = 1;

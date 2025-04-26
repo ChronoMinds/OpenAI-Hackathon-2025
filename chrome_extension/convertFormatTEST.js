@@ -15,6 +15,8 @@ END:VEVENT
 END:VCALENDAR
 `;
 
+
+
 // Call your function
 const googleEvent = convertICSToGoogleEvent(icsTestContent);
 
