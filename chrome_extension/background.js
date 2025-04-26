@@ -2,8 +2,8 @@ import * as utils from './utils.js';
 
 chrome.contextMenus.create({                                                                                                                                                           
   id: "generateICS",                                                                                                                                                                    
-  title: "Generate ICS from selected text",                                                                                                                                             
-  contexts: ["selection"]                                                                                                                                                               
+  title: "Add Event to Calendar",                                                                                                                                             
+  contexts: ["selection"]                                                                                                                                              
 });
 
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
@@ -80,7 +80,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
       };
       reader.readAsDataURL(blob);
     } 
-    utils.success("Succesfully downloaded ics file.");
+    utils.success("Succesfully created event!");
   } catch (err) {
     console.error("Error during ICS generation: " + JSON.stringify(err, Object.getOwnPropertyNames(err)), err);
   }
