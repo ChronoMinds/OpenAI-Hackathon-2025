@@ -4,8 +4,10 @@ console.log('popup.js loaded');
 
 const createBtn = document.getElementById('createIcsButton');
 console.log('Button:', createBtn);
-document.getElementById("codeInput").value = await utils.getStatus();
-await utils.setStatus("");
+if(await utils.getStorage("errorFlag") == 1) {
+  document.getElementById("codeInput").value = await utils.getStorage("selectedText");
+  await utils.setStorage("errorFlag",0);
+}
 if (createBtn) {
   createBtn.addEventListener('click', () => {
     console.log('Create ICS Button clicked!');

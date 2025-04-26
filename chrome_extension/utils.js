@@ -22,11 +22,11 @@ export function validateICS(icsContent) {
   return false;
 }
 
-export async function getStatus() {
-  return (await chrome.storage.local.get("status")).status;
+export async function getStorage(key) {
+  return (await chrome.storage.local.get(key))[key];
 }
-export async function setStatus(value) {
-  await chrome.storage.local.set({ status: value });
+export async function setStorage(key,value) {
+  await chrome.storage.local.set({ [key]: value });
 }
 
 export async function generateICSFromOpenAI(prompt) {

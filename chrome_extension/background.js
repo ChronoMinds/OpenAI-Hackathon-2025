@@ -28,7 +28,8 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
 
     if (!icsContent || !utils.validateICS(icsContent)) {
       console.error("Failed to generate valid ICS after multiple attempts.");
-      await utils.setStatus(selectedText);
+      await utils.setStorage("errorFlag",1)
+      await utils.setStorage("selectedText",selectedText);
       chrome.action.openPopup()
       return;
     }
