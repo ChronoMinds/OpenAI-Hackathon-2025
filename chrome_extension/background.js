@@ -14,7 +14,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   const prompt = "Please generate an ICS for: " + selectedText;
 
   try {
-    const maxAttempts = 3;
+    const maxAttempts = 1;
     let icsContent = null;
     let attempt = 0;
 
