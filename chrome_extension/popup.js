@@ -36,9 +36,7 @@ document.getElementById("submitCode").addEventListener("click", async function (
   try {
     const log = await utils.getStorage("log");
     const prompt = "Please execute the user task/information in question and add a valid ICS file after five hashtags ('#####'). The user does not get to see the ics itself but the system will take care of it. User task/information: " + userInput;
-    alert(prompt);
     const aiMessage = await utils.generateICSFromOpenAI(prompt);
-    alert(aiMessage);
     if (!aiMessage) {
       alert("No response from AI.");
       return;
