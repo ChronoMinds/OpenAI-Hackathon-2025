@@ -1,0 +1,21 @@
+{
+  "manifest_version": 2,
+  "name": "Send Selected Text to API",
+  "version": "1.0",
+  "description": "Send selected text to API and download the response.",
+  "options_ui": {
+    "page": "config.html",
+    "open_in_tab": true
+  },
+  "permissions": ["contextMenus", "downloads", "activeTab", "storage"],
+  "background": {
+    "scripts": ["ical.js","background.js"]
+  },
+  "applications": {
+    "gecko": {
+      "id": "send-text@example.com",
+      "strict_min_version": "91.0"
+    }
+  }
+}
+
