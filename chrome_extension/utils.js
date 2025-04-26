@@ -18,6 +18,7 @@ export function validateICS(icsContent) {
     }
   } catch (e) {
     console.error("Invalid ICS format:", e);
+    appendStorage("log",icsContent);
   }
   return false;
 }
@@ -27,6 +28,9 @@ export async function getStorage(key) {
 }
 export async function setStorage(key,value) {
   await chrome.storage.local.set({ [key]: value });
+}
+export async function appendStorage(key,msg) {
+  await chrome.storage.local.set({[key]: (await chrome.storage.local.get(key))[key] + "\n" + msg});
 }
 
 export async function generateICSFromOpenAI(prompt) {
@@ -51,6 +55,7 @@ export async function generateICSFromOpenAI(prompt) {
   const data = await response.json();
 
   if (!response.ok) {
+    console.error(JSON.stringify(data));
     console.error("OpenAI API Error:", data);
     throw new Error("OpenAI request failed");
   }
@@ -125,3 +130,12 @@ export function convertICSToGoogleEvent(icsContent) {
   }
 }
 
+export function success(message) {
+  chrome.notifications.create({
+    type: "basic",
+    iconUrl: "icons/icon.png", // oder irgendein kleines Icon deiner Extension
+    title: "Success",
+    message: message,
+    priority: 0
+  });
+}

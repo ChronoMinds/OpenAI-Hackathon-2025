@@ -6,7 +6,7 @@
     "page": "config.html",
     "open_in_tab": true
   },
-  "permissions": ["scripting", "activeTab", "contextMenus", "downloads", "activeTab", "storage"],
+  "permissions": ["scripting", "activeTab", "contextMenus", "downloads", "activeTab", "storage","notifications"],
   "host_permissions": [
     "<all_urls>"
   ],

@@ -9,7 +9,7 @@ chrome.contextMenus.create({
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   if (info.menuItemId !== "generateICS") return;
 
-
+  await utils.setStorage("log","");
   const selectedText = info.selectionText;
   const prompt = `
   You are a strict ICS file generator.
@@ -38,19 +38,18 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   ` + selectedText;
 
   try {
-    const maxAttempts = 1;
+    const maxAttempts = 2;
     let icsContent = null;
     let attempt = 0;
-
     while (attempt < maxAttempts) {
-      icsContent = await utils.generateICSFromOpenAI(prompt);
+      icsContent = await utils.generateICSFromOpenAI(prompt + "\nExection History:\n" + await utils.getStorage("log"));
       if (utils.validateICS(icsContent)) break;
 
       console.warn(`Attempt ${attempt + 1} failed ICS validation.`);
       attempt++;
     }
 
-    if (!icsContent || !utils.validateICS(icsContent)) {
+    if (!icsContent || !(utils.validateICS(icsContent))) {
       console.error("Failed to generate valid ICS after multiple attempts.");
       await utils.setStorage("errorFlag",1)
       await utils.setStorage("selectedText",selectedText);
@@ -75,6 +74,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
       console.error("Error reading blob as Data URL:", err);
     };
     reader.readAsDataURL(blob);
+    utils.success("Succesfully downloaded ics file.");
   } catch (err) {
     console.error("Error during ICS generation: " + JSON.stringify(err, Object.getOwnPropertyNames(err)), err);
   }

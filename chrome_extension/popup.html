@@ -23,7 +23,7 @@
     }
 
     .chat-container {
-      <!-- flex-grow: 1; -->
+      flex-grow: 1;
       display: flex;
       flex-direction: column;
       gap: 12px;
@@ -32,6 +32,7 @@
       background: #fff;
       border: 1px solid #ccc;
       border-radius: 8px;
+        box-sizing: border-box; /* wichtig für saubere Breite/Höhe */
     }
 
     .message {
@@ -62,7 +63,6 @@
     }
 
     #codeInput, #aiResponse {
-      width: 100%;
       min-height: 60px;
       resize: none;
       padding: 8px;
