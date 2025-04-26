@@ -34,6 +34,7 @@ export async function appendStorage(key,msg) {
 }
 
 export async function generateICSFromOpenAI(prompt) {
+  console.error("Starting OpenAI request with prompt:", prompt);
   const apiKey = await getOpenAIKey();
   if (!apiKey) {
     console.error("OpenAI API key not set.");
@@ -46,9 +47,9 @@ export async function generateICSFromOpenAI(prompt) {
       "Authorization": `Bearer ${apiKey}`
     },
     body: JSON.stringify({
-      model: "gpt-4.1-nano", // oder "gpt-3.5-turbo"
+      model: "gpt-4.1-nano", // oder "gpt-4.1-nano"
       messages: [{ role: "user", content: prompt }],
-      temperature: 0.3
+      temperature: 0 //just for demo
     })
   });
 
@@ -59,7 +60,7 @@ export async function generateICSFromOpenAI(prompt) {
     console.error("OpenAI API Error:", data);
     throw new Error("OpenAI request failed");
   }
-
+  console.error("OpenAI response:", data.choices[0].message.content);
   return data.choices[0].message.content;
 }
 
@@ -164,7 +165,9 @@ export function createGoogleCalendarEvent(accessToken, event) {
     },
     body: JSON.stringify(event)
   })
+  // .then(response => console.error(response.json()))  // 🛠 FIXED this line
   .catch(error => {
     console.error("Error creating event:", error);
   });
+  success("Successfully created event in Google Calendar.");
 }

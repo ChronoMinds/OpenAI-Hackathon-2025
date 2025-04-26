@@ -35,7 +35,7 @@ document.getElementById("submitCode").addEventListener("click", async function (
 
   try {
     const log = await utils.getStorage("log");
-    const prompt = "Please execute the user task/information in question and add a valid ICS file after five hashtags ('#####'). The user does not get to see the ics itself but the system will take care of it. User task/information: " + userInput;
+    const prompt = "Write a short response; then '#####', and then a valid ICS file. The user does not get to see the ics itself but the system will take care of it. User task/information: " + userInput;
     const aiMessage = await utils.generateICSFromOpenAI(prompt);
     if (!aiMessage) {
       alert("No response from AI.");
@@ -68,11 +68,13 @@ document.getElementById('createIcsButton').addEventListener('click', async () =>
   }
 
   try {
-    const blob = new Blob([output], { type: 'text/calendar;charset=utf-8' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = 'event.ics';
-    link.click();
+    // const blob = new Blob([output], { type: 'text/calendar;charset=utf-8' });
+    // const link = document.createElement('a');
+    // link.href = URL.createObjectURL(blob);
+    // link.download = 'event.ics';
+    // link.click();
+    var google_event = utils.convertICSToGoogleEvent(output);
+    utils.createGoogleCalendarEvent(await utils.getStorage("GoogleToken"), google_event);
   } catch (error) {
     console.error('Error creating ICS file:', error);
     alert('Error creating ICS file.');
