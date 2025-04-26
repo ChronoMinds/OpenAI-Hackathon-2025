@@ -1,5 +1,4 @@
 import * as utils from './utils.js';
-import ICAL from './ical.js'
 
 chrome.contextMenus.create({                                                                                                                                                           
   id: "generateICS",                                                                                                                                                                    
