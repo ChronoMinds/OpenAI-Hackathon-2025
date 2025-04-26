@@ -9,6 +9,7 @@ chrome.contextMenus.create({
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   if (info.menuItemId !== "generateICS") return;
 
+
   const selectedText = info.selectionText;
   const prompt = "Please generate an ICS for: " + selectedText;
 
@@ -27,6 +28,8 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
 
     if (!icsContent || !utils.validateICS(icsContent)) {
       console.error("Failed to generate valid ICS after multiple attempts.");
+      await utils.setStatus(selectedText);
+      chrome.action.openPopup()
       return;
     }
 
@@ -48,7 +51,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
     };
     reader.readAsDataURL(blob);
   } catch (err) {
-    console.error("Error during ICS generation:", err);
+    console.error("Error during ICS generation: " + JSON.stringify(err, Object.getOwnPropertyNames(err)), err);
   }
 });
 
