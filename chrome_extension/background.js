@@ -1,11 +1,13 @@
-browser.contextMenus.create({
-  id: "generateICS",
-  title: "Generate ICS from selected text",
-  contexts: ["selection"]
+import ICAL from './ical.js'
+
+chrome.contextMenus.create({                                                                                                                                                           
+  id: "generateICS",                                                                                                                                                                    
+  title: "Generate ICS from selected text",                                                                                                                                             
+  contexts: ["selection"]                                                                                                                                                               
 });
 
 async function getOpenAIKey() {
-  const result = await browser.storage.local.get("openaiKey");
+  const result = await chrome.storage.local.get("openaiKey");
   return result.openaiKey;
 }
 
@@ -54,7 +56,7 @@ async function generateICSFromOpenAI(prompt) {
   return data.choices[0].message.content;
 }
 
-browser.contextMenus.onClicked.addListener(async (info, tab) => {
+chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   if (info.menuItemId !== "generateICS") return;
 
   const selectedText = info.selectionText;
@@ -79,16 +81,33 @@ browser.contextMenus.onClicked.addListener(async (info, tab) => {
     }
 
     const blob = new Blob([icsContent], { type: "text/calendar" });
-    const url = URL.createObjectURL(blob);
 
-    browser.downloads.download({
-      url: url,
-      filename: "generated-event.ics",
-      saveAs: true
-    });
+    const reader = new FileReader();
+    reader.onload = function () {
+      const url = reader.result; // das ist jetzt eine data:URL
 
+      chrome.downloads.download({
+        url: url,
+        filename: "generated-event.ics",
+        saveAs: true
+      });
+    };
+
+    reader.onerror = function (err) {
+      console.error("Error reading blob as Data URL:", err);
+    };
+    reader.readAsDataURL(blob);
   } catch (err) {
     console.error("Error during ICS generation:", err);
   }
 });
 
+let lastSelectedText = "";
+
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.action === "textSelected") {
+    lastSelectedText = message.text;
+  } else if (message.action === "getSelectedText") {
+    sendResponse({ text: lastSelectedText });
+  }
+});
