@@ -50,3 +50,71 @@ export async function generateICSFromOpenAI(prompt) {
 
   return data.choices[0].message.content;
 }
+
+
+export function convertICSToGoogleEvent(icsContent) {
+  try {
+    const jcalData = ICAL.parse(icsContent);
+    const comp = new ICAL.Component(jcalData);
+    const vevent = comp.getFirstSubcomponent("vevent");
+
+    if (!vevent) {
+      console.error("No VEVENT found in ICS.");
+      return null;
+    }
+
+    const summary = vevent.getFirstPropertyValue("summary") || '';
+    const description = vevent.getFirstPropertyValue("description") || '';
+    const location = vevent.getFirstPropertyValue("location") || '';
+    const uid = vevent.getFirstPropertyValue("uid") || '';
+    const startTime = vevent.getFirstPropertyValue("dtstart");
+    const endTime = vevent.getFirstPropertyValue("dtend");
+
+    if (!startTime || !endTime) {
+      console.error("Missing start or end time in ICS.");
+      return null;
+    }
+
+    // Format the dateTime correctly
+    //const startDateTime = startTime.toString(); // e.g. '20250427T150000Z'
+    //const endDateTime = endTime.toString();     // e.g. '20250427T160000Z'
+
+    // Convert 'YYYYMMDDTHHmmssZ' → 'YYYY-MM-DDTHH:mm:ssZ'
+    function formatICALDate(icalDateObj) {
+      // icalDateObj is an ICAL.Time object, not a plain string
+      const year = icalDateObj.year.toString().padStart(4, '0');
+      const month = icalDateObj.month.toString().padStart(2, '0');
+      const day = icalDateObj.day.toString().padStart(2, '0');
+      const hour = icalDateObj.hour.toString().padStart(2, '0');
+      const minute = icalDateObj.minute.toString().padStart(2, '0');
+      const second = icalDateObj.second.toString().padStart(2, '0');
+    
+      return `${year}-${month}-${day}T${hour}:${minute}:${second}Z`;
+    }
+    
+    
+    const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    
+
+    const googleEvent = {
+      summary,
+      location,
+      description,
+      start: {
+        dateTime: formatICALDate(startTime),
+        timeZone: userTimeZone, // You could dynamically detect if needed
+      },
+      end: {
+        dateTime: formatICALDate(endTime),
+        timeZone: userTimeZone,
+      },
+    };
+
+    return googleEvent;
+
+  } catch (e) {
+    console.error("Error parsing ICS:", e);
+    return null;
+  }
+}
+
