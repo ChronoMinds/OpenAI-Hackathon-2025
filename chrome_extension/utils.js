@@ -165,7 +165,11 @@ export function createGoogleCalendarEvent(accessToken, event) {
     },
     body: JSON.stringify(event)
   })
-  // .then(response => console.error(response.json()))  // 🛠 FIXED this line
+  .then(async (response) => {
+  const responseBody = await response.json();
+  console.log("Response status:", response.status);
+  console.log("Response body:", responseBody);
+})
   .catch(error => {
     console.error("Error creating event:", error);
   });
